@@ -13,6 +13,8 @@ import router from './router'
 
 //引入公用样式
 import '@/styles/common.less'
+//引入图标
+import '@/assets/icon/iconfont.css'
 //注册elementui
 Vue.use(ElementUI);
 Vue.use(VueParticles)  

@@ -18,7 +18,7 @@
               type="text"
               v-model="searchForm.keyWord"
               autocomplete="off"
-              placeholder="商品名称或条形码"
+              placeholder="商品名称/条形码"
               style="width: 250px"
             ></el-input>
           </el-form-item>
@@ -42,8 +42,8 @@
           <el-table-column prop="salePrice" label="售价(元)"></el-table-column>
           <el-table-column prop="promotionalPrice" label="促销价(元)"></el-table-column>
           <el-table-column prop="marketPrice" label="市场价(元)"></el-table-column>
-          <el-table-column prop="inventory" label="库存" width="80px"></el-table-column>
-          <el-table-column prop="inventoryTotal" label="库存总额(元)"></el-table-column>
+          <el-table-column prop="stock" label="库存" width="80px"></el-table-column>
+          <el-table-column prop="stockTotal" label="库存总额(元)"></el-table-column>
           <el-table-column prop="salesTotal" label="销售总额(元)"></el-table-column>
           <el-table-column label="管理" width="174px">
             <template slot-scope="scope">
@@ -79,56 +79,56 @@ export default {
         {
           barCode: "6911989262549",
           goodsName: "优乐美",
-          cateName: "优乐美",
+          cateName: "食品类",
           salePrice: "2.00",
           promotionalPrice: "未促销",
           marketPrice: "2.40",
-          inventory: "5",
-          inventoryTotal: "35.00",
+          stock: "5",
+          stockTotal: "35.00",
           salesTotal: "40.00"
         },
         {
           barCode: "6911989262549",
           goodsName: "优乐美",
-          cateName: "优乐美",
+          cateName: "食品类",
           salePrice: "2.00",
           promotionalPrice: "未促销",
           marketPrice: "2.40",
-          inventory: "5",
-          inventoryTotal: "35.00",
+          stock: "5",
+          stockTotal: "35.00",
           salesTotal: "40.00"
         },
         {
           barCode: "6911989262549",
           goodsName: "优乐美",
-          cateName: "优乐美",
+          cateName: "食品类",
           salePrice: "2.00",
           promotionalPrice: "未促销",
           marketPrice: "2.40",
-          inventory: "5",
-          inventoryTotal: "35.00",
+          stock: "5",
+          stockTotal: "35.00",
           salesTotal: "40.00"
         },
         {
           barCode: "6911989262549",
           goodsName: "优乐美",
-          cateName: "优乐美",
+          cateName: "食品类",
           salePrice: "2.00",
           promotionalPrice: "未促销",
           marketPrice: "2.40",
-          inventory: "5",
-          inventoryTotal: "35.00",
+          stock: "5",
+          stockTotal: "35.00",
           salesTotal: "40.00"
         },
         {
           barCode: "6911989262549",
           goodsName: "优乐美",
-          cateName: "优乐美",
+          cateName: "食品类",
           salePrice: "2.00",
           promotionalPrice: "未促销",
           marketPrice: "2.40",
-          inventory: "5",
-          inventoryTotal: "35.00",
+          stock: "5",
+          stockTotal: "35.00",
           salesTotal: "40.00"
         }
       ]

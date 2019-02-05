@@ -50,6 +50,31 @@ export default new Router({
           path: '/salestatistics',
           name: 'salestatistics',
           component: () => import('./views/SaleStatistics/SaleStatistics.vue')
+        },
+        {
+          path: '/stockmanage',
+          name: 'stockmanage',
+          component: () => import('./views/Stockmanage/Stockmanage.vue')
+        },
+        {
+          path: '/stockadd',
+          name: 'stockadd',
+          component: () => import('./views/Stockadd/Stockadd.vue')
+        },
+        {
+          path: '/saleslist',
+          name: 'saleslist',
+          component: () => import('./views/Saleslist/Saleslist.vue')
+        },
+        {
+          path: '/goodsoutstock',
+          name: 'goodsoutstock',
+          component: () => import('./views/Goodsoutstock/Goodsoutstock.vue')
+        },
+        {
+          path: '/goodsreturn',
+          name: 'goodsreturn',
+          component: () => import('./views/Goodsreturn/Goodsreturn.vue')
         }
       ]
     }

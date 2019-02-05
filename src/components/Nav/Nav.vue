@@ -52,7 +52,7 @@ export default {
           ]
         },
         {
-          icon: "el-icon-menu",
+          icon: "el-icon-smms-zhanghaoguanli",
           index: "2",
           title: "账号管理",
           subs: [
@@ -86,8 +86,42 @@ export default {
           ]
         },
         {
-          icon: "el-icon-date",
+          icon: "el-icon-smms-jinhuo",
           index: "4",
+          title: "进货管理",
+          subs: [
+            {
+              index: "/stockmanage",
+              title: "库存管理"
+            },
+            {
+              index: "/stockadd",
+              title: "添加库存"
+            }
+          ]
+        },
+        {
+          icon: "el-icon-smms-chuhuo",
+          index: "5",
+          title: "出货管理",
+          subs: [
+            {
+              index: "/saleslist",
+              title: "销售列表"
+            },
+            {
+              index: "/goodsoutstock",
+              title: "商品出库"
+            },
+            {
+              index: "/goodsreturn",
+              title: "商品退货"
+            }
+          ]
+        },
+        {
+          icon: "el-icon-smms-tongji",
+          index: "6",
           title: "统计管理",
           subs: [
             {
