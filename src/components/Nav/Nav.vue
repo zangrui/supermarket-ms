@@ -1,0 +1,117 @@
+<template>
+  <el-menu
+    background-color="#324157"
+    text-color="#bfcbd9"
+    :default-active="this.$route.path"
+    class="sidebar-el-menu"
+    :collapse="collapse"
+    router
+    unique-opened
+  >
+    <template v-for="item in items">
+      <!-- 有子菜单 -->
+      <template v-if="item.subs">
+        <el-submenu :index="item.index" :key="item.index">
+          <template slot="title">
+            <i :class="item.icon"></i>
+            <span slot="title">{{ item.title }}</span>
+          </template>
+          <template v-for="subItem in item.subs">
+            <el-menu-item :index="subItem.index" :key="subItem.index">{{ subItem.title }}</el-menu-item>
+          </template>
+        </el-submenu>
+      </template>
+      <!-- 没有子菜单 -->
+      <template v-else>
+        <el-menu-item :index="item.index" :key="item.index">
+          <i :class="item.icon"></i>
+          <span slot="title">{{ item.title }}</span>
+        </el-menu-item>
+      </template>
+    </template>
+  </el-menu>
+</template>
+</el-menu>
+</template>
+<script>
+import bus from "../bus.js";
+export default {
+  data() {
+    return {
+      collapse: false,
+      items: [
+        {
+          icon: "el-icon-setting",
+          index: "1",
+          title: "系统管理",
+          subs: [
+            {
+              index: "/",
+              title: "系统信息"
+            }
+          ]
+        },
+        {
+          icon: "el-icon-menu",
+          index: "2",
+          title: "账号管理",
+          subs: [
+            {
+              index: "/accountmanage",
+              title: "账号管理"
+            },
+            {
+              index: "/accountadd",
+              title: "添加账号"
+            },
+            {
+              index: "/passwordmodify",
+              title: "密码修改"
+            }
+          ]
+        },
+        {
+          icon: "el-icon-goods",
+          index: "3",
+          title: "商品管理",
+          subs: [
+            {
+              index: "/goodsmanage",
+              title: "商品管理"
+            },
+            {
+              index: "/goodsadd",
+              title: "添加商品"
+            }
+          ]
+        },
+        {
+          icon: "el-icon-date",
+          index: "4",
+          title: "统计管理",
+          subs: [
+            {
+              index: "/salestatistics",
+              title: "销售统计"
+            }
+          ]
+        }
+      ]
+    };
+  },
+  created() {
+    // 通过 Event Bus 进行组件间通信，来折叠侧边栏
+    bus.$on("collapse", msg => {
+      this.collapse = msg;
+    });
+  }
+};
+</script>
+<style lang="less">
+.el-menu {
+  border: none;
+  height: 100%;
+}
+</style>
+
+
