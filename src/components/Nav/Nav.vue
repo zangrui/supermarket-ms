@@ -129,6 +129,36 @@ export default {
               title: "销售统计"
             }
           ]
+        },
+        {
+          icon: "el-icon-menu",
+          index: "7",
+          title: "分类管理",
+          subs: [
+            {
+              index: "/classifymanage",
+              title: "分类管理"
+            },
+            {
+              index: "/classifyadd",
+              title: "添加分类"
+            }
+          ]
+        },
+        {
+          icon: "el-icon-smms-huiyuanguanli",
+          index: "8",
+          title: "会员管理",
+          subs: [
+            {
+              index: "/membermanage",
+              title: "会员管理"
+            },
+            {
+              index: "/memberadd",
+              title: "添加会员"
+            }
+          ]
         }
       ]
     };

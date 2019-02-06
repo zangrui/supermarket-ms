@@ -3,7 +3,8 @@
     <div class="title">
       <div class="collapse-btn" @click="collapseChage">
         <i class="el-icon-menu"></i>
-      </div>华联超市后台管理系统
+      </div>
+      <span>华联超市后台管理系统</span>
     </div>
   </div>
 </template>

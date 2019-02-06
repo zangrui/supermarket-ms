@@ -54,27 +54,47 @@ export default new Router({
         {
           path: '/stockmanage',
           name: 'stockmanage',
-          component: () => import('./views/Stockmanage/Stockmanage.vue')
+          component: () => import('./views/StockManage/StockManage.vue')
         },
         {
           path: '/stockadd',
           name: 'stockadd',
-          component: () => import('./views/Stockadd/Stockadd.vue')
+          component: () => import('./views/StockAdd/StockAdd.vue')
         },
         {
           path: '/saleslist',
           name: 'saleslist',
-          component: () => import('./views/Saleslist/Saleslist.vue')
+          component: () => import('./views/SalesList/SalesList.vue')
         },
         {
           path: '/goodsoutstock',
           name: 'goodsoutstock',
-          component: () => import('./views/Goodsoutstock/Goodsoutstock.vue')
+          component: () => import('./views/GoodsOutStock/GoodsOutStock.vue')
         },
         {
           path: '/goodsreturn',
           name: 'goodsreturn',
-          component: () => import('./views/Goodsreturn/Goodsreturn.vue')
+          component: () => import('./views/GoodsReturn/GoodsReturn.vue')
+        },
+        {
+          path: '/classifymanage',
+          name: 'classifymanage',
+          component: () => import('./views/ClassifyManage/ClassifyManage.vue')
+        },
+        {
+          path: '/classifyadd',
+          name: 'classifyadd',
+          component: () => import('./views/ClassifyAdd/ClassifyAdd.vue')
+        },
+        {
+          path: '/membermanage',
+          name: 'membermanage',
+          component: () => import('./views/MemberManage/MemberManage.vue')
+        },
+        {
+          path: '/memberadd',
+          name: 'memberadd',
+          component: () => import('./views/MemberAdd/MemberAdd.vue')
         }
       ]
     }

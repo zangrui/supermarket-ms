@@ -7,10 +7,10 @@
       <div class="text item">
         <el-form size="small" :model="searchForm" inline class="demo-ruleForm">
             <el-col :span="24">
-                <el-form-item label="时间">
-                    <el-date-picker type="date" placeholder="开始时间" v-model="searchForm.startTime" style="width: 120px"></el-date-picker>
-                    <big>--</big>
-                    <el-date-picker type="date" placeholder="结束时间" v-model="searchForm.endTime" style="width: 120px"></el-date-picker>
+                <el-form-item label="　时间">
+                    <el-date-picker type="date" placeholder="开始时间" v-model="searchForm.startTime" style="width: 130px"></el-date-picker>
+                    <big>-</big>
+                    <el-date-picker type="date" placeholder="结束时间" v-model="searchForm.endTime" style="width: 130px"></el-date-picker>
                 </el-form-item>
             </el-col>
             <el-col :span="24">
