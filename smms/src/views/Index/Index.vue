@@ -3,7 +3,7 @@
     <el-container>
       <el-header height="70px">
           <!-- 头部组件 -->
-            <Top></Top>
+          <Top></Top>
       </el-header>
       <el-container>
           <!-- 导航组件 -->
@@ -15,7 +15,7 @@
           </el-main>
           <el-footer height="46px">
               <!-- 尾部组件 -->
-                <Bottom></Bottom>
+              <Bottom></Bottom>
           </el-footer>
         </el-container>
       </el-container>

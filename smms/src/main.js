@@ -1,5 +1,7 @@
 //引入vue
 import Vue from 'vue'
+//引入axios
+import axios from 'axios'
 //引入elementui组件和样式
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
@@ -17,7 +19,11 @@ import '@/styles/common.less'
 import '@/assets/icon/iconfont.css'
 //注册elementui
 Vue.use(ElementUI);
-Vue.use(VueParticles)  
+//注册vue-particles
+Vue.use(VueParticles); 
+
+//把axios挂在Vue原型上
+Vue.prototype.axios = axios;
 
 //阻止生产提示
 Vue.config.productionTip = false

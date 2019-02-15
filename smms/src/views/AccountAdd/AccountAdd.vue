@@ -46,6 +46,8 @@
   </div>
 </template>
 <script>
+//引入qs库
+import qs from "qs";
 export default {
   data() {
     // 包含特殊字符的函数
@@ -101,7 +103,7 @@ export default {
         username: [
           { validator: username, trigger: "blur" },
           { required: true, message: "请输入账号", trigger: "blur" },
-          { min: 5, max: 10, message: "账号长度在 5 - 10 位", trigger: "blur" }
+          { min: 3, max: 5, message: "账号长度在 3 - 5 位", trigger: "blur" }
         ],
         password: [
           { required: true, validator: pass, trigger: "blur" },
@@ -109,7 +111,7 @@ export default {
         ],
         checkPwd: [{ required: true, validator: checkPass, trigger: "blur" }],
         userGroup: [
-            { required: true, message: '请选择用户组', trigger: "change" }
+          { required: true, message: "请选择用户组", trigger: "change" }
         ]
       }
     };
@@ -118,15 +120,40 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          alert("添加账号成功!");
-          // let params = {
-          //   username: this.accountAddForm.username,
-          //   password: this.accountAddForm.password
-          // };
-          // 直接跳转到账号管理
-          this.$router.push("/accountmanage");
+          //收集账号数据
+          let params = {
+            username: this.accountAddForm.username,
+            password: this.accountAddForm.password,
+            usergroup: this.accountAddForm.userGroup
+          };
+          //使用axios发送数据给后端
+          this.axios
+            .post(
+              "http://127.0.0.1:3000/account/accountadd",
+              qs.stringify(params)
+            )
+            .then(response => {
+              //接收响应数据
+              let { error_code, reason } = response.data;
+              if (!error_code) {
+                this.$message({
+                  //弹出成功提示
+                  showClose: true,
+                  type: "success",
+                  message: reason
+                });
+                //跳转到账号管理列表
+                this.$router.push("/accountmanage");
+              } else {
+                //弹出失败提示
+                this.$message.error(reason);
+              }
+            })
+            .catch(err => {
+              console.log(err);
+            });
         } else {
-          alert("添加账号失败!");
+          this.$message.error("添加账号失败!");
           return false;
         }
       });
