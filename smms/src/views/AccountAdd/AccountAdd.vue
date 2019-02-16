@@ -17,11 +17,11 @@
           hide-required-asterisk
         >
           <!-- 账号 -->
-          <el-form-item label="账号" prop="username">
+          <el-form-item label="账　　号" prop="username">
             <el-input type="text" v-model="accountAddForm.username" autocomplete="off"></el-input>
           </el-form-item>
           <!-- 密码 -->
-          <el-form-item label="密码" prop="password">
+          <el-form-item label="密　　码" prop="password">
             <el-input type="password" v-model="accountAddForm.password" autocomplete="off"></el-input>
           </el-form-item>
           <!-- 确认密码 -->
@@ -29,7 +29,7 @@
             <el-input type="password" v-model="accountAddForm.checkPwd" autocomplete="off"></el-input>
           </el-form-item>
           <!-- 选中用户组 -->
-          <el-form-item label="选择用户组" prop="userGroup">
+          <el-form-item label="用户组" prop="userGroup">
             <el-select v-model="accountAddForm.userGroup" placeholder="请选择用户组">
               <el-option label="普通用户" value="普通用户"></el-option>
               <el-option label="高级管理员" value="高级管理员"></el-option>
@@ -103,11 +103,11 @@ export default {
         username: [
           { validator: username, trigger: "blur" },
           { required: true, message: "请输入账号", trigger: "blur" },
-          { min: 3, max: 5, message: "账号长度在 3 - 5 位", trigger: "blur" }
+          { min: 3, max: 6, message: "账号长度在 3 - 6 位", trigger: "blur" }
         ],
         password: [
           { required: true, validator: pass, trigger: "blur" },
-          { min: 6, max: 16, message: "密码长度在 6 - 16 位", trigger: "blur" }
+          { min: 3, max: 6, message: "密码长度在 3 - 6 位", trigger: "blur" }
         ],
         checkPwd: [{ required: true, validator: checkPass, trigger: "blur" }],
         userGroup: [

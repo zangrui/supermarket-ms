@@ -111,11 +111,11 @@ export default {
         username: [
           { validator: username, trigger: "blur" },
           { required: true, message: "请输入账号", trigger: "blur" },
-          { min: 3, max: 5, message: "账号长度在 3 - 5 位", trigger: "blur" }
+          { min: 3, max: 6, message: "账号长度在 3 - 6 位", trigger: "blur" }
         ],
         password: [
           { required: true, validator: pass, trigger: "blur" },
-          { min: 6, max: 16, message: "密码长度在 6 - 16 位", trigger: "blur" }
+          { min: 3, max: 6, message: "密码长度在 3 - 6 位", trigger: "blur" }
         ],
         checkPass: [{ required: true, validator: checkPwd, trigger: "blur" }]
       }

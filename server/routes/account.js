@@ -32,15 +32,30 @@ router.post('/accountadd', (req, res) => {
 });
 
 /** 
- * 账号列表路由 /accountlist
+ * 按分页显示账号账号列表路由 /accountlistbypage
 */
-router.get('/accountlist', (req, res) => {
-  //构造查询账号数据的sql语句   按照时间排序  降序
-  const sqlStr = 'select * from account order by ctime desc';
+router.get('/accountlistbypage', (req, res) => {
+  //接收参数
+  let { pageSize, currentPage } = req.query;
+  //默认值
+  pageSize = pageSize ? pageSize : 3;
+  currentPage = currentPage ? currentPage : 1;
+  //构造查询账所有号数据的sql语句   按照时间排序  降序
+  let sqlStr = 'select * from account order by ctime desc';
   //执行sql语句
   connection.query(sqlStr, (err, data) => {
     if (err) throw err;
-    res.send(data);
+    //获取数据总条数
+    let total = data.length;
+    //分页条件 跳过多少条
+    let n = (currentPage - 1) * pageSize;
+    //拼接分页的sql语句
+    sqlStr += ` limit ${n}, ${pageSize}`;
+    //执行sql语句
+    connection.query(sqlStr, (err, data) => {
+      if(err) throw err;
+      res.send({total,data});
+    });
   });
 });
 
@@ -76,6 +91,46 @@ router.get('/accountedit', (req, res) => {
   connection.query(sqlStr, (err, data) => {
     if (err) throw err;
     res.send(data);
+  });
+});
+
+/** 
+ * 账号保存修改路由 /accountSaveEdit
+*/
+router.post('/accountSaveEdit', (req, res) => {
+  //接收修改后的账号数据 和id
+  let { username, usergroup, id } = req.body;
+  //构造修改账号的sql语句 
+  const sqlStr = `update account set username='${username}', usergroup='${usergroup}' where id = ${id}`;
+  //执行sql语句
+  connection.query(sqlStr, (err, data) => {
+    if (err) throw err;
+    //判断受影响的行数
+    if (data.affectedRows > 0) {
+      res.send({ "error_code": 0, "reason": "修改账号成功！" });
+    } else {
+      res.send({ "error_code": 1, "reason": "修改账号失败！" });
+    }
+  });
+});
+
+/** 
+ * 批量删除路由 /batchdelete
+*/
+router.get('/batchdelete', (req, res) => {
+  //接收id
+  let { selectedId } = req.query;
+  //构造删除账号的sql语句 
+  const sqlStr = `delete from account where id in (${selectedId})`;
+  //执行sql语句
+  connection.query(sqlStr, (err, data) => {
+    if (err) throw err;
+    //判断受影响的行数
+    if (data.affectedRows > 0) {
+      res.send({ "error_code": 0, "reason": "删除账号成功！" });
+    } else {
+      res.send({ "error_code": 1, "reason": "删除账号失败！" });
+    }
   });
 });
 module.exports = router;
