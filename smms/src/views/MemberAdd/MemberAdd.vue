@@ -21,12 +21,15 @@
           <el-form-item label="会员卡卡号" prop="cardNum">
             <el-input type="text" v-model="memberAddForm.cardNum" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="用户组" prop="userGroup">
-            <el-select v-model="memberAddForm.userGroup" placeholder="请选择用户组">
+          <el-form-item label="会员等级" prop="grade">
+            <el-select v-model="memberAddForm.grade" placeholder="选择会员等级">
               <el-option label="普通会员" value="普通会员"></el-option>
               <el-option label="铜牌会员" value="铜牌会员"></el-option>
               <el-option label="金牌会员" value="金牌会员"></el-option>
             </el-select>
+          </el-form-item>
+          <el-form-item label="会员积分" prop="integral">
+            <el-input type="text" v-model="memberAddForm.integral" autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item label="身份证号" prop="idNum">
             <el-input type="text" v-model="memberAddForm.idNum" autocomplete="off"></el-input>
@@ -44,14 +47,13 @@
             <el-input type="text" v-model="memberAddForm.email" autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item label="地区选择" prop="areaSelection">
-            <el-select v-model="memberAddForm.province" placeholder="请选择省份">
-              <el-option label="四川" value="四川"></el-option>
-              <el-option label="云南省" value="云南省"></el-option>
-            </el-select>
-            <el-select v-model="memberAddForm.city" placeholder="请选择城市">
-              <el-option label="成都市" value="成都市"></el-option>
-              <el-option label="达州市" value="达州市"></el-option>
-            </el-select>
+            <el-cascader
+              :options="options"
+              expand-trigger="hover"
+              separator="-"
+              v-model="memberAddForm.areaSelection"
+              placeholder="请选择城市"
+            ></el-cascader>
           </el-form-item>
           <el-form-item label="详细地址" prop="address">
             <el-input type="text" v-model="memberAddForm.address" autocomplete="off"></el-input>
@@ -69,30 +71,55 @@
   </div>
 </template>
 <script>
+//引入qs模块
+import qs from "qs";
 export default {
   data() {
     return {
       memberAddForm: {
         name: "",
         cardNum: "",
-        userGroup: "",
+        grade: "",
+        integral: "",
         idNum: "",
-        status: false,
+        status: true,
         phoneNum: "",
         telNum: "",
         email: "",
-        province: "",
-        city: "",
+        areaSelection: [],
         address: "",
         postalCode: ""
       },
+      options: [
+        {
+          value: "四川省",
+          label: "四川省",
+          children: [
+            {
+              value: "成都市",
+              label: "成都市"
+            },
+            {
+              value: "达州市",
+              label: "达州市"
+            }
+          ]
+        },
+        {
+          value: "重庆市",
+          label: "重庆市"
+        }
+      ],
       rules: {
         name: [{ required: true, message: "请输入姓名", trigger: "blur" }],
         cardNum: [
           { required: true, message: "请输入会员卡卡号", trigger: "blur" }
         ],
-        userGroup: [
-          { required: true, message: "请选择用户组", trigger: "change" }
+        grade: [
+          { required: true, message: "请选择会员等级", trigger: "change" }
+        ],
+        integral: [
+          { required: true, message: "请输入会员积分", trigger: "blur" }
         ],
         idNum: [{ required: true, message: "请输入身份证号", trigger: "blur" }],
         status: [
@@ -106,7 +133,7 @@ export default {
         ],
         email: [{ required: true, message: "请输入邮箱", trigger: "blur" }],
         areaSelection: [
-          { required: true, message: "请选择地区", trigger: "blur" }
+          { required: true, message: "请选择地区", trigger: "change" }
         ],
         address: [{ required: true, message: "请输入地址", trigger: "blur" }],
         postalCode: [
@@ -119,11 +146,49 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          alert("添加会员成功!");
-          // 直接跳转到会员管理
-          this.$router.push("/membermanage");
+          //收集会员数据
+          let params = {
+            name: this.memberAddForm.name,
+            cardNum: this.memberAddForm.cardNum,
+            grade: this.memberAddForm.grade,
+            integral: this.memberAddForm.integral,
+            idNum: this.memberAddForm.idNum,
+            status: this.memberAddForm.status,
+            phoneNum: this.memberAddForm.phoneNum,
+            telNum: this.memberAddForm.telNum,
+            email: this.memberAddForm.email,
+            areaSelection: this.memberAddForm.areaSelection.join("-"),
+            address: this.memberAddForm.address,
+            postalCode: this.memberAddForm.postalCode
+          };
+          //使用axios发送数据给后端
+          this.axios
+            .post(
+              "http://127.0.0.1:3000/member/memberadd",
+              qs.stringify(params)
+            )
+            .then(response => {
+              //接收响应数据
+              let { error_code, reason } = response.data;
+              if (!error_code) {
+                this.$message({
+                  //弹出成功提示
+                  showClose: true,
+                  type: "success",
+                  message: reason
+                });
+                //跳转到会员管理列表
+                this.$router.push("/membermanage");
+              } else {
+                //弹出失败提示
+                this.$message.error(reason);
+              }
+            })
+            .catch(err => {
+              console.log(err);
+            });
         } else {
-          alert("添加会员失败!");
+          this.$message.error("添加会员失败!");
           return false;
         }
       });
@@ -149,10 +214,10 @@ export default {
             .el-input {
               width: 250px;
             }
-            .el-select {
-                margin-right: 6px;
+            .el-select,
+            .el-cascader {
               .el-input {
-                width: 124px;
+                width: 160px;
               }
             }
           }

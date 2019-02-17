@@ -41,12 +41,13 @@ export default {
 <style lang="less">
 .index {
   height: 100%;
+  background: url(../../assets/bg.jpg) no-repeat;
   .el-container {
     height: 100%;
     .el-header {
       line-height: 70px;
       padding: 0;
-      background-color: #242f42;
+      background-color: #242f4280;
       color: #ffffff;
     }
     .el-container{

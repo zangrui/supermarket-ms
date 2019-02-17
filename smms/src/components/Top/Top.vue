@@ -29,8 +29,9 @@ export default {
   .title {
     font-size: 20px;
     .collapse-btn {
-      float: left;
-      padding: 0 20px;
+      display: inline-block;
+      width: 64px;
+      text-align: center;
       cursor: pointer;
     }
   }

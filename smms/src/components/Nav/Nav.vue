@@ -1,37 +1,37 @@
 <template>
-  <el-menu
-    background-color="#324157"
-    text-color="#bfcbd9"
-    :default-active="this.$route.path"
-    class="sidebar-el-menu"
-    :collapse="collapse"
-    router
-    unique-opened
-  >
-    <template v-for="item in items">
-      <!-- 有子菜单 -->
-      <template v-if="item.subs">
-        <el-submenu :index="item.index" :key="item.index">
-          <template slot="title">
+  <div class="nav">
+    <el-menu
+      background-color="#32415780"
+      text-color="#bfcbd9"
+      :default-active="this.$route.path"
+      class="sidebar-el-menu"
+      :collapse="collapse"
+      router
+      unique-opened
+    >
+      <template v-for="item in items">
+        <!-- 有子菜单 -->
+        <template v-if="item.subs">
+          <el-submenu :index="item.index" :key="item.index">
+            <template slot="title">
+              <i :class="item.icon"></i>
+              <span slot="title">{{ item.title }}</span>
+            </template>
+            <template v-for="subItem in item.subs">
+              <el-menu-item :index="subItem.index" :key="subItem.index">{{ subItem.title }}</el-menu-item>
+            </template>
+          </el-submenu>
+        </template>
+        <!-- 没有子菜单 -->
+        <template v-else>
+          <el-menu-item :index="item.index" :key="item.index">
             <i :class="item.icon"></i>
             <span slot="title">{{ item.title }}</span>
-          </template>
-          <template v-for="subItem in item.subs">
-            <el-menu-item :index="subItem.index" :key="subItem.index">{{ subItem.title }}</el-menu-item>
-          </template>
-        </el-submenu>
+          </el-menu-item>
+        </template>
       </template>
-      <!-- 没有子菜单 -->
-      <template v-else>
-        <el-menu-item :index="item.index" :key="item.index">
-          <i :class="item.icon"></i>
-          <span slot="title">{{ item.title }}</span>
-        </el-menu-item>
-      </template>
-    </template>
-  </el-menu>
-</template>
-</el-menu>
+    </el-menu>
+  </div>
 </template>
 <script>
 import bus from "../bus.js";
@@ -172,9 +172,42 @@ export default {
 };
 </script>
 <style lang="less">
-.el-menu {
-  border: none;
-  height: 100%;
+.nav {
+  .sidebar-el-menu {
+    height: 100%;
+    border: none;
+    .el-submenu {
+      .el-submenu__title,
+      .el-menu {
+        background-color: transparent !important;
+        .el-menu-item {
+          background-color: transparent !important;
+        }
+      }
+      .el-submenu__title:hover,
+      .el-menu .el-menu-item:hover {
+        background-color: #324157 !important;
+      }
+    }
+  }
+  .sidebar-el-menu:not(.el-menu--collapse) {
+    width: 200px;
+  }
+}
+.el-menu--vertical {
+  .el-menu--popup {
+    padding: 0;
+    .el-menu-item {
+      background-color: transparent !important;
+    }
+  }
+}
+.el-menu--vertical {
+  .el-menu--popup {
+    .el-menu-item:hover {
+      background-color: #324157 !important;
+    }
+  }
 }
 </style>
 

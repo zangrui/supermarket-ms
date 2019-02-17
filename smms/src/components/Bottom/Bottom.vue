@@ -10,8 +10,8 @@ export default {
 </script>
 <style lang="less">
 .bottom {
-        border-top: 1px solid #ccc;
-        color: #2d3a4b;
+        border-top: 1px solid #ffffff80;
+        color: #ffffff80;
         font-size: 12px;
     }
 </style>

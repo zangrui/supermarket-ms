@@ -33,7 +33,7 @@
         </el-table>
         <!-- 分页 -->
         <el-pagination
-          style="margin-top: 20px;"
+          style="margin-top: 20px;text-align: right"
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
           :current-page="currentPage"
@@ -44,35 +44,34 @@
         ></el-pagination>
 
         <!-- 批量删除按钮 & 取消选择按钮 -->
-        <div style="margin-top: 20px; text-align: left;">
-          <el-button type="danger" size="small" @click="batchDelete">批量删除</el-button>
+        <div>
+          <el-button size="small" type="primary" @click="batchDelete">批量删除</el-button>
           <el-button size="small" @click="cancelSelect()">取消选择</el-button>
         </div>
 
         <!-- 修改模态框 -->
         <el-dialog title="账号修改" :visible.sync="flag" width="400px">
-          <!-- 添加账号表单 -->
           <el-form
             size="small"
-            ref="editForm"
-            :model="editForm"
+            ref="accountEditForm"
+            :model="accountEditForm"
             status-icon
             :rules="rules"
-            label-width="90px"
+            label-width="100px"
             hide-required-asterisk
           >
             <!-- 账号 -->
             <el-form-item label="账　号" prop="username">
               <el-input
                 type="text"
-                v-model="editForm.username"
+                v-model="accountEditForm.username"
                 autocomplete="off"
                 style="width:203px"
               ></el-input>
             </el-form-item>
-            <!-- 选中用户组 -->
+            <!-- 选择用户组 -->
             <el-form-item label="用户组" prop="usergroup">
-              <el-select v-model="editForm.usergroup" placeholder="请选择用户组">
+              <el-select v-model="accountEditForm.usergroup" placeholder="请选择用户组">
                 <el-option label="普通用户" value="普通用户"></el-option>
                 <el-option label="高级管理员" value="高级管理员"></el-option>
               </el-select>
@@ -80,7 +79,7 @@
           </el-form>
           <div slot="footer" class="dialog-footer">
             <el-button size="small" @click="flag = false">取 消</el-button>
-            <el-button size="small" type="primary" @click="saveEdit('editForm')">确 定</el-button>
+            <el-button size="small" type="primary" @click="saveEdit('accountEditForm')">确 定</el-button>
           </div>
         </el-dialog>
       </div>
@@ -120,7 +119,7 @@ export default {
       currentPage: 1,
       total: 0,
       pageSize: 3,
-      editForm: {
+      accountEditForm: {
         username: "",
         usergroup: ""
       },
@@ -194,7 +193,7 @@ export default {
         this.$message.error("请选择后再操作！");
         return;
       }
-      //收集需要删除的账号的id
+      //收集需要删除账号的id
       let selectedIdArr = this.selecteAccount.map(v => v.id);
       //提示框
       this.$confirm("你确定要删除吗？", "提示", {
@@ -249,7 +248,7 @@ export default {
         .get(`http://127.0.0.1:3000/account/accountedit?id=${id}`)
         .then(response => {
           //回填表单
-          this.editForm = response.data[0];
+          this.accountEditForm = response.data[0];
           // 显示模态框
           this.flag = true;
         })
@@ -263,14 +262,14 @@ export default {
         if (valid) {
           //收集修改后的数据 和原来的id
           let params = {
-            username: this.editForm.username,
-            usergroup: this.editForm.usergroup,
+            username: this.accountEditForm.username,
+            usergroup: this.accountEditForm.usergroup,
             id: this.editId
           };
           //使用axios发送修改后的数据
           this.axios
             .post(
-              "http://127.0.0.1:3000/account/accountSaveEdit",
+              "http://127.0.0.1:3000/account/accountsaveedit",
               qs.stringify(params)
             )
             .then(response => {
@@ -295,6 +294,8 @@ export default {
             .catch(err => {
               console.log(err);
             });
+        } else {
+          this.$message.error("修改商品失败!");
         }
       });
     },
@@ -355,9 +356,9 @@ export default {
       font-weight: 600;
       background-color: #f1f1f1;
     }
-    .el-card__body{
-      .el-dialog{
-        .el-dialog__body{
+    .el-card__body {
+      .el-dialog {
+        .el-dialog__body {
           padding: 20px 20px 10px;
         }
       }

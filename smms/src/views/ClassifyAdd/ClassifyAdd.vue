@@ -43,13 +43,15 @@
   </div>
 </template>
 <script>
+//引入qs模块
+import qs from "qs";
 export default {
   data() {
     return {
       classifyAddForm: {
         classify: "",
         classifyName: "",
-        status: false
+        status: true
       },
       rules: {
         classify: [
@@ -58,7 +60,7 @@ export default {
         classifyName: [
           { required: true, message: "分类名称不能为空", trigger: "blur" }
         ],
-        state: [{ required: true, message: "请选择状态", trigger: "blur" }]
+        status: [{ required: true, message: "请选择状态", trigger: "blur" }]
       }
     };
   },
@@ -66,11 +68,40 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          alert("添加分类成功!");
-          // 直接跳转到分类管理
-          this.$router.push("/classifymanage");
+          //收集分类数据
+          let params = {
+            classify: this.classifyAddForm.classify,
+            classifyName: this.classifyAddForm.classifyName,
+            status: this.classifyAddForm.status
+          };
+          //使用axios发送数据给后端
+          this.axios
+            .post(
+              "http://127.0.0.1:3000/classify/classifyadd",
+              qs.stringify(params)
+            )
+            .then(response => {
+              //接收响应数据
+              let { error_code, reason } = response.data;
+              if (!error_code) {
+                this.$message({
+                  //弹出成功提示
+                  showClose: true,
+                  type: "success",
+                  message: reason
+                });
+                //跳转到分类管理列表
+                this.$router.push("/classifymanage");
+              } else {
+                //弹出失败提示
+                this.$message.error(reason);
+              }
+            })
+            .catch(err => {
+              console.log(err);
+            });
         } else {
-          alert("添加分类失败!");
+          this.$message.error("添加分类失败!");
           return false;
         }
       });

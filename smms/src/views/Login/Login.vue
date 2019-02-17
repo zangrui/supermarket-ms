@@ -148,7 +148,6 @@ export default {
 <style lang="less">
 .login {
   height: 100%;
-  background: #2d3a4b;
   background: url(../../assets/bg.jpg) no-repeat;
   .login-wrapper {
     width: 400px;
