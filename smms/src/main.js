@@ -6,7 +6,7 @@ import axios from 'axios'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 //vue粒子特效
-import VueParticles from 'vue-particles' 
+import VueParticles from 'vue-particles'
 
 //引入顶级组件
 import App from './App.vue'
@@ -20,10 +20,23 @@ import '@/assets/icon/iconfont.css'
 //注册elementui
 Vue.use(ElementUI);
 //注册vue-particles
-Vue.use(VueParticles); 
+Vue.use(VueParticles);
 
 //把axios挂在Vue原型上
 Vue.prototype.axios = axios;
+
+//全局路由守卫 拦截所有路由
+router.beforeEach((to, from, next) => {
+  //获取token
+  const token = window.localStorage.getItem('token');
+  if (!token && to.path !== '/login') {
+    Vue.prototype.$message.error('请登录后再操作！')
+    //如果去其他页面，跳转到登录页
+    next('/login')
+  } else {
+    next();//放行    
+  }
+});
 
 //阻止生产提示
 Vue.config.productionTip = false

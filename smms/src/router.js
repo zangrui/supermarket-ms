@@ -9,26 +9,26 @@ export default new Router({
   routes: [
     {
       path: '/login',
-      name: 'Login',
+      name: 'login',
       component: () => import('./views/Login/Login.vue')
     },
     {
       path: '/',
       component: () => import('./views/Index/Index.vue'),
-      children:[
+      children: [
         {
-          path:'',
-          name:'home',
+          path: '',
+          name: 'home',
           component: () => import('./views/Home/Home.vue')
         },
         {
-          path:'accountmanage',
-          name:'accountmanage',
+          path: 'accountmanage',
+          name: 'accountmanage',
           component: () => import('./views/AccountManage/AccountManage.vue')
         },
         {
-          path:'accountadd',
-          name:'accountadd',
+          path: 'accountadd',
+          name: 'accountadd',
           component: () => import('./views/AccountAdd/AccountAdd.vue')
         },
         {

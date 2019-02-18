@@ -58,6 +58,8 @@
 </template>
 
 <script>
+//引入qs模块
+import qs from "qs";
 export default {
   data() {
     // 包含特殊字符的函数
@@ -122,18 +124,47 @@ export default {
     };
   },
   methods: {
+    //登录验证
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          alert("登录成功!");
-          // let params = {
-          //   username: this.loginForm.username,
-          //   password: this.loginForm.password
-          // };
-          // 直接跳转到后端主页
-          this.$router.push("/");
+          //收集账号密码
+          let params = {
+            username: this.loginForm.username,
+            password: this.loginForm.password
+          };
+          //使用axios发送数据
+          this.axios
+            .post(
+              "http://127.0.0.1:3000/login/checklogin",
+              qs.stringify(params)
+            )
+            .then(response => {
+              //接收数据
+              let { error_code, reason ,token, username} = response.data;
+              if (!error_code) {
+                // 把token存在浏览器的本地存储中
+                window.localStorage.setItem('token',token);
+                // 把token存在浏览器的本地存储中
+                window.localStorage.setItem('username',username);
+                this.$message({
+                  //弹出成功提示
+                  showClose: true,
+                  type: "success",
+                  message: reason
+                });
+                // 跳转到后端主页
+                this.$router.push("/");
+              } else {
+                //弹出失败提示
+                this.$message.error(reason);
+              }
+            })
+            .catch(err => {
+              console.log(err);
+            });
         } else {
-          alert("登录失败!");
+          this.$message.error("登录失败!");
           return false;
         }
       });

@@ -99,9 +99,9 @@ router.get('/classifyedit', (req, res) => {
 */
 router.post('/classifysaveedit', (req, res) => {
   //接收修改后的分类数据 和id
-  let { classifyName, id } = req.body;
+  let { classify, classifyName, id } = req.body;
   //构造修改分类的sql语句 
-  const sqlStr = `update classify set classifyName='${classifyName}' where id = ${id}`;
+  const sqlStr = `update classify set classify='${classify}', classifyName='${classifyName}' where id = ${id}`;
   //执行sql语句
   connection.query(sqlStr, (err, data) => {
     if (err) throw err;

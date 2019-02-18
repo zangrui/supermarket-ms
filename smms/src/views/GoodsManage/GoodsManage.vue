@@ -40,6 +40,7 @@
           <el-table-column prop="goodsName" label="商品名称"></el-table-column>
           <el-table-column prop="cateName" label="所属分类"></el-table-column>
           <el-table-column prop="salePrice" label="售价(元)"></el-table-column>
+          <el-table-column prop="promotion" label="是否促销"></el-table-column>
           <el-table-column prop="marketPrice" label="市场价(元)"></el-table-column>
           <el-table-column prop="goodsNum" label="库存" width="80px"></el-table-column>
           <el-table-column label="库存总额(元)">
@@ -123,6 +124,9 @@
             <el-form-item label="市场价" prop="marketPrice">
               <el-input type="text" v-model="goodsEditForm.marketPrice" autocomplete="off"></el-input>&nbsp;元
             </el-form-item>
+            <el-form-item label="是否促销" prop="promotion">
+              <el-switch v-model="goodsEditForm.promotion"></el-switch>
+            </el-form-item>
             <el-form-item label="入库数量" prop="goodsNum">
               <el-input type="text" v-model="goodsEditForm.goodsNum" autocomplete="off"></el-input>
               <div style="height:16px;line-height:16px;font-size:12px;color:#aaa">计重商品单位为千克</div>
@@ -158,6 +162,7 @@ export default {
         cateName: "",
         barCode: "",
         goodsName: "",
+        promotion: "",
         salePrice: "",
         marketPrice: "",
         goodsNum: ""
@@ -175,6 +180,9 @@ export default {
         ],
         salePrice: [
           { required: true, message: "商品售价不能为空", trigger: "blur" }
+        ],
+        promotion: [
+          { required: true, message: "请选择是否促销", trigger: "change" }
         ],
         marketPrice: [
           { required: true, message: "市场价不能为空", trigger: "blur" }
@@ -316,6 +324,7 @@ export default {
             barCode: this.goodsEditForm.barCode,
             goodsName: this.goodsEditForm.goodsName,
             salePrice: this.goodsEditForm.salePrice,
+            promotion: this.goodsEditForm.promotion,
             marketPrice: this.goodsEditForm.marketPrice,
             goodsNum: this.goodsEditForm.goodsNum,
             id: this.editId

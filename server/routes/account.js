@@ -12,6 +12,25 @@ router.all('*', (req, res, next) => {
 });
 
 /** 
+ * 验证账号路由 /checkaccount
+*/
+router.get('/checkaccount', (req, res) => {
+  //接收数据
+  let { username } = req.query;
+  //构造sql语句
+  const sqlStr = `select * from account where username='${username}'`;
+  //执行sql语句
+  connection.query(sqlStr, (err, data) => {
+    if (err) throw err;
+    if (data.length) {
+      res.send({ "error_code": 1, "reason": "账号已存在" });
+    } else {
+      res.send({ "error_code": 0, "reason": "账号可以使用" });
+    }
+  });
+});
+
+/** 
  * 添加账号路由 /accountadd
 */
 router.post('/accountadd', (req, res) => {
@@ -53,8 +72,8 @@ router.get('/accountlistbypage', (req, res) => {
     sqlStr += ` limit ${n}, ${pageSize}`;
     //执行sql语句
     connection.query(sqlStr, (err, data) => {
-      if(err) throw err;
-      res.send({total,data});
+      if (err) throw err;
+      res.send({ total, data });
     });
   });
 });
@@ -133,4 +152,43 @@ router.get('/batchdelete', (req, res) => {
     }
   });
 });
+
+/**
+ * 验证旧密码路由 /checkOldPwd
+ */
+router.get('/checkOldPwd', (req, res) => {
+  //接收旧密码和用户名
+  let { oldPwd, username } = req.query;
+  //构造sql
+  const sqlStr = `select * from account where username='${username}' and password='${oldPwd}'`;
+  //执行sql
+  connection.query(sqlStr, (err, data) => {
+    if (err) throw err;
+    if (data.length) {
+      res.send({ "error_code": 0, "reason": "旧密码正确" });
+    } else {
+      res.send({ "error_code": 1, "reason": "旧密码错误" });
+    }
+  });
+});
+
+/**
+ * 保存新密码路由 /savenewpwd
+ */
+router.post('/savenewpwd', (req, res) => {
+  //接收旧密码和用户名和新密码
+  let { oldPwd, username, newPwd } = req.query;
+  //构造sql
+  const sqlStr = `update account set password='${newPwd}' where username='${username}' and password='${oldPwd}'`;
+  //执行sql
+  connection.query(sqlStr, (err, data) => {
+    if (err) throw err;
+    if (data.affectedRows > 0) {
+      res.send({ "error_code": 0, "reason": "密码修改成功！请重新登录！" });
+    } else {
+      res.send({ "error_code": 1, "reason": "密码修改失败！" });
+    }
+  });
+});
+
 module.exports = router;

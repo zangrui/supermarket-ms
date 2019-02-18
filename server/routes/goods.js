@@ -17,8 +17,9 @@ router.all('*', (req, res, next) => {
 router.post('/goodsadd', (req, res) => {
   //接收数据
   let { cateName, barCode, goodsName, salePrice,
-        marketPrice, costPrice, goodsNum, goodsWeight,
-        goodsUnit, discount, promotion, goodsDesc } = req.body;
+    marketPrice, costPrice, goodsNum, goodsWeight,
+    goodsUnit, discount, promotion, goodsDesc } = req.body;
+  promotion = promotion == "true" ? "促销" : "未促销";
   //构造添加商品的sql语句
   const sqlStr = `insert into goods(cateName, barCode, goodsName, salePrice,
                   marketPrice, costPrice, goodsNum, goodsWeight,
@@ -97,6 +98,11 @@ router.get('/goodsedit', (req, res) => {
   //执行sql语句
   connection.query(sqlStr, (err, data) => {
     if (err) throw err;
+    if (data[0].promotion === "促销") {
+      data[0].promotion = true;
+    } else {
+      data[0].promotion = false;
+    }
     res.send(data);
   });
 });
@@ -106,10 +112,11 @@ router.get('/goodsedit', (req, res) => {
 */
 router.post('/goodssaveedit', (req, res) => {
   //接收修改后的商品数据 和id
-  let { cateName, barCode, goodsName, salePrice, marketPrice,  goodsNum, id } = req.body;
+  let { cateName, barCode, goodsName, salePrice, promotion, marketPrice, goodsNum, id } = req.body;
+  promotion = promotion == "true" ? "促销" : "未促销";
   //构造修改商品的sql语句 
   const sqlStr = `update goods set cateName='${cateName}', barCode='${barCode}', 
-                  goodsName='${goodsName}', salePrice='${salePrice}', marketPrice='${marketPrice}', 
+                  goodsName='${goodsName}', salePrice='${salePrice}', promotion='${promotion}', marketPrice='${marketPrice}', 
                   goodsNum='${goodsNum}' where id = ${id}`;
   //执行sql语句
   connection.query(sqlStr, (err, data) => {

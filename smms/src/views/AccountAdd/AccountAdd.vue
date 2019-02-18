@@ -65,8 +65,29 @@ export default {
     const username = (rule, value, callback) => {
       if (!checkSpecificKey(value)) {
         callback(new Error("用户名不能包含特殊字符"));
+      } else {
+        //获取账号
+        let username = value;
+        //发送ajax传入账号
+        this.axios
+          .get(
+            `http://127.0.0.1:3000/account/checkaccount?username=${username}`
+          )
+          .then(response => {
+            //接收数据
+            let { error_code, reason } = response.data;
+            if (error_code) {
+              //错误提示
+              callback(new Error(reason));
+            } else {
+              //正确回调
+              callback();
+            }
+          })
+          .catch(err => {
+            console.log(err);
+          });
       }
-      callback();
     };
     //验证密码函数
     const pass = (rule, value, callback) => {

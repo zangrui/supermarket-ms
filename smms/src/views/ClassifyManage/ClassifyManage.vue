@@ -14,8 +14,12 @@
           @selection-change="handleSelectionChange"
         >
           <el-table-column type="selection"></el-table-column>
-          <el-table-column prop="classifyName" label="分类名称" width="750px"></el-table-column>
-          <el-table-column label="管理" width="180px">
+          <el-table-column prop="classify" label="分类等级"></el-table-column>
+          <el-table-column prop="classifyName" label="分类名称"></el-table-column>
+          <el-table-column label="创建日期">
+            <template slot-scope="scope">{{ scope.row.ctime | filterCtime }}</template>
+          </el-table-column>
+          <el-table-column label="管理">
             <template slot-scope="scope">
               <el-button size="mini" type="primary" @click="handleEdit(scope.row.id)">
                 <i class="el-icon-edit"></i> 编辑
@@ -55,6 +59,13 @@
             label-width="100px"
             hide-required-asterisk
           >
+            <el-form-item label="分类等级" prop="classify">
+            <el-select v-model="classifyEditForm.classify" placeholder="请选择分类等级" style="width: 120px">
+              <el-option label="顶级分类" value="顶级分类"></el-option>
+              <el-option label="二级分类" value="二级分类"></el-option>
+              <el-option label="三级分类" value="三级分类"></el-option>
+            </el-select>
+          </el-form-item>
             <el-form-item label="分类名称" prop="classifyName">
               <el-input
                 type="text"
@@ -76,6 +87,8 @@
 <script>
 //引入qs模块
 import qs from "qs";
+//引入moment模块
+import moment from "moment";
 export default {
   data() {
     return {
@@ -87,9 +100,13 @@ export default {
       total: 0,
       pageSize: 3,
       classifyEditForm: {
+        classify:"",
         classifyName: ""
       },
       rules: {
+         classify: [
+          { required: true, message: "请选择分类等级", trigger: "change" }
+        ],
         classifyName: [
           { required: true, message: "分类名称不能为空", trigger: "blur" }
         ]
@@ -223,6 +240,7 @@ export default {
         if (valid) {
           //收集修改后的数据 和原来的id
           let params = {
+            classify: this.classifyEditForm.classify,
             classifyName: this.classifyEditForm.classifyName,
             id: this.editId
           };
@@ -297,6 +315,13 @@ export default {
             message: "已取消删除"
           });
         });
+    }
+  },
+  //过滤器
+  filters: {
+    //过滤时间的函数
+    filterCtime(ctime) {
+      return moment(ctime).format("YYYY-MM-DD HH:mm:ss");
     }
   }
 };
