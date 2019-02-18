@@ -5,11 +5,6 @@ const express = require('express');
 const router = express.Router();
 //引入连接数据库模块
 const connection = require('./connect')
-//统一设置响应头 解决跨域
-router.all('*', (req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  next();
-});
 
 /** 
  * 添加会员路由 /memberadd
@@ -18,7 +13,6 @@ router.post('/memberadd', (req, res) => {
   //接收数据
   let { name, cardNum, grade, integral, idNum, status, phoneNum, telNum, email, areaSelection, address, postalCode } = req.body;
   //构造增加会员的sql语句
-  console.log(areaSelection)
   const sqlStr = `insert into member(name, cardNum, grade, integral, 
                   idNum, status, phoneNum, telNum, email, areaSelection, 
                   address, postalCode) values('${name}', '${cardNum}', 

@@ -16,12 +16,12 @@
           hide-required-asterisk
         >
           <!-- 原密码 -->
-          <el-form-item label="原密码" prop="oldpwd">
-            <el-input type="password" v-model="passwordModifyForm.oldpwd" autocomplete="off"></el-input>
+          <el-form-item label="原密码" prop="oldPwd">
+            <el-input type="password" v-model="passwordModifyForm.oldPwd" autocomplete="off"></el-input>
           </el-form-item>
           <!-- 新密码 -->
           <el-form-item label="新密码" prop="nwePwd">
-            <el-input type="password" v-model="passwordModifyForm.nwePwd" autocomplete="off"></el-input>
+            <el-input type="password" v-model="passwordModifyForm.newPwd" autocomplete="off"></el-input>
           </el-form-item>
           <!-- 确认新密码 -->
           <el-form-item label="确认新密码" prop="checknwePwd">
@@ -53,26 +53,45 @@ export default {
     };
     //验证旧密码是否正确
     const checkOldPwd = (rule, value, callback) => {
-        callback();
+      //获取当前登录账号
+      let username = window.localStorage.getItem("username");
+      //发送ajax传入用户输入旧密码和用户名
+      this.req
+        .get("/account/checkOldPwd", { oldPwd: value, username: username })
+        .then(response => {
+          //接收数据
+          let { error_code, reason } = response.data;
+          if (error_code) {
+            //错误提示
+            callback(new Error(reason));
+          } else {
+            callback();
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
     };
-    //验证密码函数
+    //验证新密码函数
     const pass = (rule, value, callback) => {
       if (value === "") {
-        callback(new Error("请输入密码"));
+        callback(new Error("请输入新密码"));
       } else if (!checkSpecificKey(value)) {
         callback(new Error("密码不能包含特殊字符"));
+      } else if (value === this.passwordModifyForm.oldPwd) {
+        callback(new Error("新密码不能和旧密码相同"));
       } else {
-        if (this.passwordModifyForm.checkPwd !== "") {
-          this.$refs.passwordModifyForm.validateField("checkPwd");
+        if (this.passwordModifyForm.checknwePwd !== "") {
+          this.$refs.passwordModifyForm.validateField("checknwePwd");
         }
         callback();
       }
     };
-    //确认密码验证函数
+    //确认新密码验证函数
     const checkPwd = (rule, value, callback) => {
       if (value === "") {
-        callback(new Error("请再次输入密码"));
-      } else if (value !== this.passwordModifyForm.password) {
+        callback(new Error("请再次输入新密码"));
+      } else if (value !== this.passwordModifyForm.nwePwd) {
         callback(new Error("两次输入密码不一致!"));
       } else {
         callback();
@@ -81,17 +100,15 @@ export default {
     return {
       // 添加账号表单数据
       passwordModifyForm: {
-        oldpwd: "",
-        nwePwd: "",
+        oldPwd: "",
+        newPwd: "",
         checknwePwd: ""
       },
       rules: {
-        oldpwd: [
-          { required: true, validator: checkOldPwd, trigger: "blur"}
-        ],
+        oldPwd: [{ required: true, validator: checkOldPwd, trigger: "blur" }],
         nwePwd: [
           { required: true, validator: pass, trigger: "blur" },
-          { min: 6, max: 16, message: "密码长度在 6 - 16 位", trigger: "blur" }
+          { min: 3, max: 6, message: "密码长度在 3 - 6 位", trigger: "blur" }
         ],
         checknwePwd: [{ required: true, validator: checkPwd, trigger: "blur" }]
       }
@@ -101,12 +118,39 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          alert("密码修改成功!");
-          
-          // 直接跳转到登录页面
-          this.$router.push("/login");
+          //收集参数
+          let params = {
+            username: window.localStorage.getItem("username"),
+            oldPwd: this.passwordModifyForm.oldpwd,
+            newPwd: this.passwordModifyForm.newPwd
+          };
+          //发送ajax
+          this.req
+            .post("/account/savenewpwd", params)
+            .then(response => {
+              //接收数据
+              let { error_code, reason } = response.data;
+              if (!error_code) {
+                //清除token
+                window.localStorage.removeItem("token");
+                //弹出成功的提示
+                this.$message({
+                  showClose: true,
+                  type: "success",
+                  message: reason
+                });
+                // 跳转到登录页面
+                this.$router.push("/login");
+              } else {
+                //弹出失败提示
+                this.$message.error(reason);
+              }
+            })
+            .catch(err => {
+              console.log(err);
+            });
         } else {
-          alert("密码修改失败!");
+          this.$message.error("密码修改失败!");
           return false;
         }
       });

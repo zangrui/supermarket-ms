@@ -109,8 +109,6 @@
   </div>
 </template>
 <script>
-//引入qs模块
-import qs from "qs";
 export default {
   data() {
     return {
@@ -165,8 +163,8 @@ export default {
         currentPage: this.currentPage
       };
       //发送ajax 传入当前页码和每页显示条数
-      this.axios
-        .get("http://127.0.0.1:3000/member/memberlistbypage", { params })
+      this.req
+        .get("/member/memberlistbypage", params)
         .then(response => {
           //接收后端返回的数据总条数 total 和 对应页码的数据 data
           let { total, data } = response.data;
@@ -220,10 +218,8 @@ export default {
       })
         .then(() => {
           //发送ajax 传入需要删除会员的id
-          this.axios
-            .get(
-              `http://127.0.0.1:3000/member/batchdelete?selectedId=${selectedIdArr}`
-            )
+          this.req
+            .get("/member/batchdelete", { selectedId: selectedIdArr })
             .then(response => {
               //接收响应数据
               let { error_code, reason } = response.data;
@@ -261,13 +257,15 @@ export default {
       //保存要修改会员的id
       this.editId = id;
       //发送ajax 传入id
-      this.axios
-        .get(`http://127.0.0.1:3000/member/memberedit?id=${id}`)
+      this.req
+        .get("/member/memberedit", { id })
         .then(response => {
           //回填表单
           this.memberEditForm = response.data[0];
           // 显示模态框
           this.flag = true;
+          //重置表单
+          this.$refs.memberEditForm.resetFields();
         })
         .catch(err => {
           console.log(err);
@@ -288,11 +286,8 @@ export default {
             id: this.editId
           };
           //使用axios发送修改后的数据
-          this.axios
-            .post(
-              "http://127.0.0.1:3000/member/membersaveedit",
-              qs.stringify(params)
-            )
+          this.req
+            .post("/member/membersaveedit", params)
             .then(response => {
               //接收响应数据
               let { error_code, reason } = response.data;
@@ -329,8 +324,8 @@ export default {
       })
         .then(() => {
           //发送ajax 传入id
-          this.axios
-            .get(`http://127.0.0.1:3000/member/memberdel?id=${id}`)
+          this.req
+            .get("/member/memberdel", { id })
             .then(response => {
               //接收响应数据
               let { error_code, reason } = response.data;

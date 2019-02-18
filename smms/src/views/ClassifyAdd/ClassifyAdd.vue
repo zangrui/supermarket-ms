@@ -15,8 +15,12 @@
           class="demo-ruleForm"
           hide-required-asterisk
         >
-          <el-form-item label="所属分类" prop="classify">
-            <el-select v-model="classifyAddForm.classify" placeholder="请选择分类" style="width: 120px">
+          <el-form-item label="分类等级" prop="classify">
+            <el-select
+              v-model="classifyAddForm.classify"
+              placeholder="请选择分类等级"
+              style="width: 140px"
+            >
               <el-option label="顶级分类" value="顶级分类"></el-option>
               <el-option label="二级分类" value="二级分类"></el-option>
               <el-option label="三级分类" value="三级分类"></el-option>
@@ -43,8 +47,6 @@
   </div>
 </template>
 <script>
-//引入qs模块
-import qs from "qs";
 export default {
   data() {
     return {
@@ -55,7 +57,7 @@ export default {
       },
       rules: {
         classify: [
-          { required: true, message: "请选择分类", trigger: "change" }
+          { required: true, message: "请选择分类等级", trigger: "change" }
         ],
         classifyName: [
           { required: true, message: "分类名称不能为空", trigger: "blur" }
@@ -75,11 +77,8 @@ export default {
             status: this.classifyAddForm.status
           };
           //使用axios发送数据给后端
-          this.axios
-            .post(
-              "http://127.0.0.1:3000/classify/classifyadd",
-              qs.stringify(params)
-            )
+          this.req
+            .post("/classify/classifyadd", params)
             .then(response => {
               //接收响应数据
               let { error_code, reason } = response.data;

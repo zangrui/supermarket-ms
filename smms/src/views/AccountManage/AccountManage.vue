@@ -87,8 +87,6 @@
   </div>
 </template>
 <script>
-//引入qs模块
-import qs from "qs";
 //引入moment模块
 import moment from "moment";
 export default {
@@ -108,8 +106,30 @@ export default {
     const username = (rule, value, callback) => {
       if (!checkSpecificKey(value)) {
         callback(new Error("用户名不能包含特殊字符"));
+      } else if (this.username !== value) {//判断是否有修改
+        //获取账号
+        let username = value;
+        //发送ajax传入账号
+        this.req
+          .get("/account/checkaccount", { username })
+          .then(response => {
+            //接收数据
+            let { error_code, reason } = response.data;
+            if (error_code) {
+              //错误提示
+              callback(new Error(reason));
+            } else {
+              //正确回调
+              callback();
+            }
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      } else {
+        //正确回调
+        callback();
       }
-      callback();
     };
     return {
       tableData: [], //账号数据
@@ -119,6 +139,8 @@ export default {
       currentPage: 1,
       total: 0,
       pageSize: 3,
+      username: "",
+      usergroup: "",
       accountEditForm: {
         username: "",
         usergroup: ""
@@ -148,8 +170,8 @@ export default {
         currentPage: this.currentPage
       };
       //发送ajax 传入当前页码和每页显示条数
-      this.axios
-        .get("http://127.0.0.1:3000/account/accountlistbypage", { params })
+      this.req
+        .get("/account/accountlistbypage", params)
         .then(response => {
           //接收后端返回的数据总条数 total 和 对应页码的数据 data
           let { total, data } = response.data;
@@ -203,10 +225,8 @@ export default {
       })
         .then(() => {
           //发送ajax 传入需要删除账号的id
-          this.axios
-            .get(
-              `http://127.0.0.1:3000/account/batchdelete?selectedId=${selectedIdArr}`
-            )
+          this.req
+            .get("/account/batchdelete", { selectedId: selectedIdArr })
             .then(response => {
               //接收响应数据
               let { error_code, reason } = response.data;
@@ -244,13 +264,18 @@ export default {
       //保存要修改账号的id
       this.editId = id;
       //发送ajax 传入id
-      this.axios
-        .get(`http://127.0.0.1:3000/account/accountedit?id=${id}`)
+      this.req
+        .get("/account/accountedit", { id })
         .then(response => {
+          //保存数据
+          this.username = response.data[0].username;
+          this.usergroup = response.data[0].usergroup;
           //回填表单
           this.accountEditForm = response.data[0];
           // 显示模态框
           this.flag = true;
+          //重置表单
+          this.$refs.accountEditForm.resetFields();
         })
         .catch(err => {
           console.log(err);
@@ -261,17 +286,23 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           //收集修改后的数据 和原来的id
+          let username = this.accountEditForm.username;
+          let usergroup = this.accountEditForm.usergroup;
           let params = {
             username: this.accountEditForm.username,
             usergroup: this.accountEditForm.usergroup,
             id: this.editId
           };
+          //判断是否有修改
+          if (this.username === username && this.usergroup === usergroup) {
+            this.$message.error("未做任何修改！");
+            // 关闭模态框
+            this.flag = false;
+            return;
+          }
           //使用axios发送修改后的数据
-          this.axios
-            .post(
-              "http://127.0.0.1:3000/account/accountsaveedit",
-              qs.stringify(params)
-            )
+          this.req
+            .post("/account/accountsaveedit", params)
             .then(response => {
               //接收响应数据
               let { error_code, reason } = response.data;
@@ -295,7 +326,7 @@ export default {
               console.log(err);
             });
         } else {
-          this.$message.error("修改商品失败!");
+          this.$message.error("账号修改失败!");
         }
       });
     },
@@ -308,8 +339,8 @@ export default {
       })
         .then(() => {
           //发送ajax 传入id
-          this.axios
-            .get(`http://127.0.0.1:3000/account/accountdel?id=${id}`)
+          this.req
+            .get("/account/accountdel", { id })
             .then(response => {
               //接收响应数据
               let { error_code, reason } = response.data;

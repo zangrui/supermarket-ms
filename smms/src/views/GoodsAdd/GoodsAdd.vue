@@ -89,8 +89,6 @@
   </div>
 </template>
 <script>
-//引入qs库
-import qs from "qs";
 export default {
   data() {
     return {
@@ -178,8 +176,8 @@ export default {
             goodsDesc: this.goodsAddForm.goodsDesc
           };
           //使用ajax发送商品数据
-          this.axios
-            .post("http://127.0.0.1:3000/goods/goodsadd", qs.stringify(params))
+          this.req
+            .post("/goods/goodsadd", params)
             .then(response => {
               //接收响应数据
               let { error_code, reason } = response.data;
