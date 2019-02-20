@@ -46,8 +46,6 @@
   </div>
 </template>
 <script>
-//引入qs库
-import qs from "qs";
 export default {
   data() {
     // 包含特殊字符的函数
@@ -69,10 +67,8 @@ export default {
         //获取账号
         let username = value;
         //发送ajax传入账号
-        this.axios
-          .get(
-            `http://127.0.0.1:3000/account/checkaccount?username=${username}`
-          )
+        this.req
+          .get("/account/checkaccount", { username })
           .then(response => {
             //接收数据
             let { error_code, reason } = response.data;
@@ -148,11 +144,8 @@ export default {
             usergroup: this.accountAddForm.userGroup
           };
           //使用axios发送数据给后端
-          this.axios
-            .post(
-              "http://127.0.0.1:3000/account/accountadd",
-              qs.stringify(params)
-            )
+          this.req
+            .post("/account/accountadd", params)
             .then(response => {
               //接收响应数据
               let { error_code, reason } = response.data;

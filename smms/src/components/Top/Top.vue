@@ -22,7 +22,7 @@
           </el-dropdown-menu>
         </el-dropdown>
       </el-col>
-      <div class="avatar el-col-12">
+      <div class="avatar el-col-12" @click="$router.push('/personal')">
         <img :src="avatarUrl" alt width="100%" height="100%">
       </div>
     </div>
@@ -34,13 +34,21 @@ export default {
   data() {
     return {
       usernam: "",
-      avatarUrl: "http://127.0.0.1:8080/avatar.jpg",
+      avatarUrl: "",
       collapse: false
     };
   },
   created() {
     // 显示当前登录的用户
     this.username = window.localStorage.getItem("username");
+    // 获取头像
+    this.getAvatar();
+    bus.$on("avt", avt => {
+      if (avt) {
+        // 获取头像
+        this.getAvatar();
+      }
+    });
   },
   methods: {
     //导航折叠
@@ -60,7 +68,22 @@ export default {
         });
         // 跳转到登录页面
         this.$router.push("/login");
+      } else if (command === "personal") {
+        // 跳转到个人中心
+        this.$router.push("/personal");
       }
+    },
+    // 获取头像信息
+    getAvatar() {
+      let username = this.username;
+      this.req
+        .get("/account/getavatar", { username })
+        .then(response => {
+          this.avatarUrl = "http://172.16.9.9:3000" + response.data[0].imgurl;
+        })
+        .catch(err => {
+          console.log(err);
+        });
     }
   }
 };
@@ -77,12 +100,12 @@ export default {
     }
   }
   .top-right {
-    .el-dropdown{
+    .el-dropdown {
       .username {
         font-size: 16px;
         color: #fff;
-        cursor:pointer;
-        .el-icon--right{
+        cursor: pointer;
+        .el-icon--right {
           margin: 0;
         }
       }
@@ -90,6 +113,7 @@ export default {
     .avatar {
       width: 60px;
       height: 60px;
+      cursor: pointer;
       margin-top: 5px;
       img {
         border-radius: 50%;

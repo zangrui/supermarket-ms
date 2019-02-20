@@ -133,7 +133,7 @@
             </el-form-item>
           </el-form>
           <div slot="footer" class="dialog-footer">
-            <el-button size="small" @click="flag = false">取 消</el-button>
+            <el-button size="small" @click="flag = false,goodsEditForm.resetFields()">取 消</el-button>
             <el-button size="small" type="primary" @click="saveEdit('goodsEditForm')">确 定</el-button>
           </div>
         </el-dialog>
@@ -142,8 +142,6 @@
   </div>
 </template>
 <script>
-//引入qs模块
-import qs from "qs";
 export default {
   data() {
     return {
@@ -203,11 +201,13 @@ export default {
       //收集当前页码和每页显示条数
       let params = {
         pageSize: this.pageSize,
-        currentPage: this.currentPage
+        currentPage: this.currentPage,
+        cateName: this.searchForm.cateName, // 查询分类名
+        keyWord: this.searchForm.keyWord // 查询关键字
       };
       //发送ajax 传入当前页码和每页显示条数
-      this.axios
-        .get("http://127.0.0.1:3000/goods/goodslistbypage", { params })
+      this.req
+        .get("/goods/goodslistbypage", params)
         .then(response => {
           //接收后端返回的数据总条数 total 和 对应页码的数据 data
           let { total, data } = response.data;
@@ -261,10 +261,8 @@ export default {
       })
         .then(() => {
           //发送ajax 传入需要删除商品的id
-          this.axios
-            .get(
-              `http://127.0.0.1:3000/goods/batchdelete?selectedId=${selectedIdArr}`
-            )
+          this.req
+            .get("/goods/batchdelete", { selectedId: selectedIdArr })
             .then(response => {
               //接收响应数据
               let { error_code, reason } = response.data;
@@ -302,13 +300,15 @@ export default {
       //保存要修改商品的id
       this.editId = id;
       //发送ajax 传入id
-      this.axios
-        .get(`http://127.0.0.1:3000/goods/goodsedit?id=${id}`)
+      this.req
+        .get("/goods/goodsedit", { id })
         .then(response => {
           //回填表单
           this.goodsEditForm = response.data[0];
           // 显示模态框
           this.flag = true;
+          //重置表单
+          this.$refs.goodsEditForm.resetFields();
         })
         .catch(err => {
           console.log(err);
@@ -330,11 +330,8 @@ export default {
             id: this.editId
           };
           //使用axios发送修改后的数据
-          this.axios
-            .post(
-              "http://127.0.0.1:3000/goods/goodssaveedit",
-              qs.stringify(params)
-            )
+          this.req
+            .post("/goods/goodssaveedit", params)
             .then(response => {
               //接收响应数据
               let { error_code, reason } = response.data;
@@ -371,8 +368,8 @@ export default {
       })
         .then(() => {
           //发送ajax 传入id
-          this.axios
-            .get(`http://127.0.0.1:3000/goods/goodsdel?id=${id}`)
+          this.req
+            .get("/goods/goodsdel", { id })
             .then(response => {
               //接收响应数据
               let { error_code, reason } = response.data;
@@ -417,7 +414,11 @@ export default {
       //触发条形码验证
       this.$refs.goodsEditForm.validateField("barCode");
     },
-    search() {}
+    // 查询
+    search() {
+      // 调用分页函数
+      this.getGoodsListByPage();
+    }
   }
 };
 </script>

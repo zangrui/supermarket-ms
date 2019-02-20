@@ -95,6 +95,11 @@ export default new Router({
           path: 'memberadd',
           name: 'memberadd',
           component: () => import('./views/MemberAdd/MemberAdd.vue')
+        },
+        {
+          path: 'personal',
+          name: 'personal',
+          component: () => import('./views/Personal/Personal.vue')
         }
       ]
     }

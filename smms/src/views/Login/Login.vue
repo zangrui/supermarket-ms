@@ -58,8 +58,6 @@
 </template>
 
 <script>
-//引入qs模块
-import qs from "qs";
 export default {
   data() {
     // 包含特殊字符的函数
@@ -134,19 +132,16 @@ export default {
             password: this.loginForm.password
           };
           //使用axios发送数据
-          this.axios
-            .post(
-              "http://127.0.0.1:3000/login/checklogin",
-              qs.stringify(params)
-            )
+          this.req
+            .post("/login/checklogin", params)
             .then(response => {
               //接收数据
-              let { error_code, reason ,token, username} = response.data;
+              let { error_code, reason, token, username } = response.data;
               if (!error_code) {
                 // 把token存在浏览器的本地存储中
-                window.localStorage.setItem('token',token);
-                // 把token存在浏览器的本地存储中
-                window.localStorage.setItem('username',username);
+                window.localStorage.setItem("token", token);
+                // 把username存在浏览器的本地存储中
+                window.localStorage.setItem("username", username);
                 this.$message({
                   //弹出成功提示
                   showClose: true,

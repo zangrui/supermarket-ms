@@ -5,11 +5,6 @@ const express = require('express');
 const router = express.Router();
 //引入连接数据库模块
 const connection = require('./connect')
-//统一设置响应头 解决跨域
-router.all('*', (req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  next();
-});
 
 /** 
  * 验证账号路由 /checkaccount
@@ -37,7 +32,7 @@ router.post('/accountadd', (req, res) => {
   //接收数据
   let { username, password, usergroup } = req.body;
   //构造增加账号的sql语句
-  const sqlStr = `insert into account(username, password, usergroup) values('${username}', '${password}', '${usergroup}')`;
+  const sqlStr = `insert into account(username, password, usergroup,imgurl) values('${username}', '${password}', '${usergroup}','/upload/avatar.jpg')`;
   //执行sql语句
   connection.query(sqlStr, (err, data) => {
     if (err) throw err;
@@ -177,7 +172,8 @@ router.get('/checkOldPwd', (req, res) => {
  */
 router.post('/savenewpwd', (req, res) => {
   //接收旧密码和用户名和新密码
-  let { oldPwd, username, newPwd } = req.query;
+  let { oldPwd, username, newPwd } = req.body;
+  console.log(newPwd)
   //构造sql
   const sqlStr = `update account set password='${newPwd}' where username='${username}' and password='${oldPwd}'`;
   //执行sql
@@ -190,5 +186,26 @@ router.post('/savenewpwd', (req, res) => {
     }
   });
 });
+
+/* 
+  个人信息路由: /accountinfo
+*/
+router.get('/accountinfo', (req, res) => {
+  // 个人信息 响应给前端
+  res.send(req.user);
+});
+
+// 获取头像请求
+router.get('/getavatar', (req, res) => {
+  let {username} = req.query;
+  // 构造sql
+  const sqlStr = `select * from account where username='${username}'`;
+  // 执行sql
+  connection.query(sqlStr, (err, data) => {
+    if (err) throw err;
+    res.send(data);
+  })
+})
+
 
 module.exports = router;

@@ -60,12 +60,16 @@
             hide-required-asterisk
           >
             <el-form-item label="分类等级" prop="classify">
-            <el-select v-model="classifyEditForm.classify" placeholder="请选择分类等级" style="width: 120px">
-              <el-option label="顶级分类" value="顶级分类"></el-option>
-              <el-option label="二级分类" value="二级分类"></el-option>
-              <el-option label="三级分类" value="三级分类"></el-option>
-            </el-select>
-          </el-form-item>
+              <el-select
+                v-model="classifyEditForm.classify"
+                placeholder="请选择分类等级"
+                style="width: 120px"
+              >
+                <el-option label="顶级分类" value="顶级分类"></el-option>
+                <el-option label="二级分类" value="二级分类"></el-option>
+                <el-option label="三级分类" value="三级分类"></el-option>
+              </el-select>
+            </el-form-item>
             <el-form-item label="分类名称" prop="classifyName">
               <el-input
                 type="text"
@@ -85,8 +89,6 @@
   </div>
 </template>
 <script>
-//引入qs模块
-import qs from "qs";
 //引入moment模块
 import moment from "moment";
 export default {
@@ -100,11 +102,11 @@ export default {
       total: 0,
       pageSize: 3,
       classifyEditForm: {
-        classify:"",
+        classify: "",
         classifyName: ""
       },
       rules: {
-         classify: [
+        classify: [
           { required: true, message: "请选择分类等级", trigger: "change" }
         ],
         classifyName: [
@@ -126,8 +128,8 @@ export default {
         currentPage: this.currentPage
       };
       //发送ajax 传入当前页码和每页显示条数
-      this.axios
-        .get("http://127.0.0.1:3000/classify/classifylistbypage", { params })
+      this.req
+        .get("/classify/classifylistbypage", params)
         .then(response => {
           //接收后端返回的数据总条数 total 和 对应页码的数据 data
           let { total, data } = response.data;
@@ -181,10 +183,8 @@ export default {
       })
         .then(() => {
           //发送ajax 传入需要删除分类的id
-          this.axios
-            .get(
-              `http://127.0.0.1:3000/classify/batchdelete?selectedId=${selectedIdArr}`
-            )
+          this.req
+            .get("/classify/batchdelete", { selectedId: selectedIdArr })
             .then(response => {
               //接收响应数据
               let { error_code, reason } = response.data;
@@ -222,13 +222,15 @@ export default {
       //保存要修改分类的id
       this.editId = id;
       //发送ajax 传入id
-      this.axios
-        .get(`http://127.0.0.1:3000/classify/classifyedit?id=${id}`)
+      this.req
+        .get("/classify/classifyedit", { id })
         .then(response => {
           //回填表单
           this.classifyEditForm = response.data[0];
           // 显示模态框
           this.flag = true;
+          //重置表单
+          this.$refs.classifyEditForm.resetFields();
         })
         .catch(err => {
           console.log(err);
@@ -245,11 +247,8 @@ export default {
             id: this.editId
           };
           //使用axios发送修改后的数据
-          this.axios
-            .post(
-              "http://127.0.0.1:3000/classify/classifysaveedit",
-              qs.stringify(params)
-            )
+          this.req
+            .post("/classify/classifysaveedit", params)
             .then(response => {
               //接收响应数据
               let { error_code, reason } = response.data;
@@ -286,8 +285,8 @@ export default {
       })
         .then(() => {
           //发送ajax 传入id
-          this.axios
-            .get(`http://127.0.0.1:3000/classify/classifydel?id=${id}`)
+          this.req
+            .get("/classify/classifydel", { id })
             .then(response => {
               //接收响应数据
               let { error_code, reason } = response.data;

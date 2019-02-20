@@ -5,11 +5,6 @@ const express = require('express');
 const router = express.Router();
 //引入连接数据库模块
 const connection = require('./connect')
-//统一设置响应头 解决跨域
-router.all('*', (req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  next();
-});
 
 /** 
  * 添加商品路由 /goodsadd
@@ -44,12 +39,20 @@ router.post('/goodsadd', (req, res) => {
 */
 router.get('/goodslistbypage', (req, res) => {
   //接收参数
-  let { pageSize, currentPage } = req.query;
+  let { pageSize, currentPage, cateName, keyWord } = req.query;
   //默认值
   pageSize = pageSize ? pageSize : 3;
   currentPage = currentPage ? currentPage : 1;
-  //构造查询所有商品数据的sql语句   按照时间排序  降序
-  let sqlStr = 'select * from goods order by ctime desc';
+  //构造查询所有商品数据的sql语句   
+  let sqlStr = 'select * from goods where 1 = 1';
+   // 分类名不为空 且 全部 那么 就拼接分类条件
+   if (cateName !== "" && cateName !== "全部") {
+    sqlStr += ` and cateName='${cateName}'`;
+  }
+  // 如果关键字不为空 就要拼接关键字查询条件
+  if (keyWord !== "") {
+    sqlStr += ` and (goodsName like "%${keyWord}%" or barCode like "%${keyWord}%")`;
+  }
   //执行sql语句
   connection.query(sqlStr, (err, data) => {
     if (err) throw err;
@@ -57,8 +60,8 @@ router.get('/goodslistbypage', (req, res) => {
     let total = data.length;
     //分页条件 跳过多少条
     let n = (currentPage - 1) * pageSize;
-    //拼接分页的sql语句
-    sqlStr += ` limit ${n}, ${pageSize}`;
+    //拼接排序+分页的sql语句
+    sqlStr += ` order by ctime desc limit ${n}, ${pageSize}`;
     //执行sql语句
     connection.query(sqlStr, (err, data) => {
       if (err) throw err;

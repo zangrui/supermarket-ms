@@ -16,12 +16,12 @@
           hide-required-asterisk
         >
           <!-- 原密码 -->
-          <el-form-item label="原密码" prop="oldpwd">
-            <el-input type="password" v-model="passwordModifyForm.oldpwd" autocomplete="off"></el-input>
+          <el-form-item label="原密码" prop="oldPwd">
+            <el-input type="password" v-model="passwordModifyForm.oldPwd" autocomplete="off"></el-input>
           </el-form-item>
           <!-- 新密码 -->
           <el-form-item label="新密码" prop="nwePwd">
-            <el-input type="password" v-model="passwordModifyForm.nwePwd" autocomplete="off"></el-input>
+            <el-input type="password" v-model="passwordModifyForm.newPwd" autocomplete="off"></el-input>
           </el-form-item>
           <!-- 确认新密码 -->
           <el-form-item label="确认新密码" prop="checknwePwd">
@@ -38,8 +38,6 @@
   </div>
 </template>
 <script>
-//引入qs模块
-import qs from "qs";
 export default {
   data() {
     // 包含特殊字符的函数
@@ -58,10 +56,8 @@ export default {
       //获取当前登录账号
       let username = window.localStorage.getItem("username");
       //发送ajax传入用户输入旧密码和用户名
-      this.axios
-        .get(
-          `http://127.0.0.1:3000/account/checkOldPwd?oldPwd=${value}&username=${username}`
-        )
+      this.req
+        .get("/account/checkOldPwd", { oldPwd: value, username: username })
         .then(response => {
           //接收数据
           let { error_code, reason } = response.data;
@@ -69,7 +65,6 @@ export default {
             //错误提示
             callback(new Error(reason));
           } else {
-            //正确回调
             callback();
           }
         })
@@ -83,6 +78,8 @@ export default {
         callback(new Error("请输入新密码"));
       } else if (!checkSpecificKey(value)) {
         callback(new Error("密码不能包含特殊字符"));
+      } else if (value === this.passwordModifyForm.oldPwd) {
+        callback(new Error("新密码不能和旧密码相同"));
       } else {
         if (this.passwordModifyForm.checknwePwd !== "") {
           this.$refs.passwordModifyForm.validateField("checknwePwd");
@@ -103,12 +100,12 @@ export default {
     return {
       // 添加账号表单数据
       passwordModifyForm: {
-        oldpwd: "",
-        nwePwd: "",
+        oldPwd: "",
+        newPwd: "",
         checknwePwd: ""
       },
       rules: {
-        oldpwd: [{ required: true, validator: checkOldPwd, trigger: "blur" }],
+        oldPwd: [{ required: true, validator: checkOldPwd, trigger: "blur" }],
         nwePwd: [
           { required: true, validator: pass, trigger: "blur" },
           { min: 3, max: 6, message: "密码长度在 3 - 6 位", trigger: "blur" }
@@ -125,14 +122,11 @@ export default {
           let params = {
             username: window.localStorage.getItem("username"),
             oldPwd: this.passwordModifyForm.oldpwd,
-            nwePwd: this.passwordModifyForm.nwePwd
+            newPwd: this.passwordModifyForm.newPwd
           };
           //发送ajax
-          this.axios
-            .post(
-              "http://127.0.0.1:3000/account/savenewpwd",
-              qs.stringify(params)
-            )
+          this.req
+            .post("/account/savenewpwd", params)
             .then(response => {
               //接收数据
               let { error_code, reason } = response.data;

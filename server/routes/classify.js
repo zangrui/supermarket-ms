@@ -5,11 +5,6 @@ const express = require('express');
 const router = express.Router();
 //引入连接数据库模块
 const connection = require('./connect')
-//统一设置响应头 解决跨域
-router.all('*', (req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  next();
-});
 
 /** 
  * 添加分类路由 /classifyadd

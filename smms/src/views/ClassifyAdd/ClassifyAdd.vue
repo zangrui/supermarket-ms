@@ -47,8 +47,6 @@
   </div>
 </template>
 <script>
-//引入qs模块
-import qs from "qs";
 export default {
   data() {
     return {
@@ -79,11 +77,8 @@ export default {
             status: this.classifyAddForm.status
           };
           //使用axios发送数据给后端
-          this.axios
-            .post(
-              "http://127.0.0.1:3000/classify/classifyadd",
-              qs.stringify(params)
-            )
+          this.req
+            .post("/classify/classifyadd", params)
             .then(response => {
               //接收响应数据
               let { error_code, reason } = response.data;
