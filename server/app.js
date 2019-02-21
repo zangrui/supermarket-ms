@@ -49,7 +49,7 @@ app.use((err, req, res, next) => {
   //当token验证失败时会抛出如下错误
   if (err.name === 'UnauthorizedError') {
     //响应给前端的信息
-    res.send({ error_code: 1, reason: '无效的token 未授权...' });
+    res.status(401).send('token无效或已过期，请重新登录！')
   }
 });
 

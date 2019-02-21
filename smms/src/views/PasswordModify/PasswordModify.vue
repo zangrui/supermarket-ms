@@ -54,7 +54,7 @@ export default {
     //验证旧密码是否正确
     const checkOldPwd = (rule, value, callback) => {
       //获取当前登录账号
-      let username = window.localStorage.getItem("username");
+      let username = window.sessionStorage.getItem("username");
       //发送ajax传入用户输入旧密码和用户名
       this.req
         .get("/account/checkOldPwd", { oldPwd: value, username: username })
@@ -120,7 +120,7 @@ export default {
         if (valid) {
           //收集参数
           let params = {
-            username: window.localStorage.getItem("username"),
+            username: window.sessionStorage.getItem("username"),
             oldPwd: this.passwordModifyForm.oldpwd,
             newPwd: this.passwordModifyForm.newPwd
           };
@@ -130,9 +130,9 @@ export default {
             .then(response => {
               //接收数据
               let { error_code, reason } = response.data;
-              if (!error_code) {
+              if (error_code === 0) {
                 //清除token
-                window.localStorage.removeItem("token");
+                window.sessionStorage.removeItem("token");
                 //弹出成功的提示
                 this.$message({
                   showClose: true,
@@ -141,7 +141,7 @@ export default {
                 });
                 // 跳转到登录页面
                 this.$router.push("/login");
-              } else {
+              } else if (error_code) {
                 //弹出失败提示
                 this.$message.error(reason);
               }

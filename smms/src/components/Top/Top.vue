@@ -40,7 +40,7 @@ export default {
   },
   created() {
     // 显示当前登录的用户
-    this.username = window.localStorage.getItem("username");
+    this.username = window.sessionStorage.getItem("username");
     // 获取头像
     this.getAvatar();
     bus.$on("avt", avt => {
@@ -60,7 +60,7 @@ export default {
       // 如果点击的是退出
       if (command === "logout") {
         // 清除token
-        window.localStorage.removeItem("token");
+        window.sessionStorage.removeItem('token');
         // 弹出提示
         this.$message({
           type: "success",

@@ -24,10 +24,20 @@ Vue.use(VueParticles);
 //把封装后axios挂在Vue原型上
 Vue.prototype.req = req;
 
+//阻止生产提示
+Vue.config.productionTip = false
+
+//创建vue实例对象 挂载dom 把路由 和 app顶级组件传入 渲染进入dom容器中
+new Vue({
+  router,
+  render: h => h(App)
+}).$mount('#app');
+
+
 //全局路由守卫 拦截所有路由
 router.beforeEach((to, from, next) => {
   //获取token
-  const token = window.localStorage.getItem('token');
+  const token = window.sessionStorage.getItem('token');
   if (!token && to.path !== '/login') {
     Vue.prototype.$message.error('请登录以后再操作！')
     //如果去其他页面，跳转到登录页
@@ -38,14 +48,4 @@ router.beforeEach((to, from, next) => {
   } else {
     next();//放行 
   }
-
 });
-
-//阻止生产提示
-Vue.config.productionTip = false
-
-//创建vue实例对象 挂载dom 把路由 和 app顶级组件传入 渲染进入dom容器中
-new Vue({
-  router,
-  render: h => h(App)
-}).$mount('#app')

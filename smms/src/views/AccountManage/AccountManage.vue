@@ -106,7 +106,8 @@ export default {
     const username = (rule, value, callback) => {
       if (!checkSpecificKey(value)) {
         callback(new Error("用户名不能包含特殊字符"));
-      } else if (this.username !== value) {//判断是否有修改
+      } else if (this.username !== value) {
+        //判断是否有修改
         //获取账号
         let username = value;
         //发送ajax传入账号
@@ -230,7 +231,7 @@ export default {
             .then(response => {
               //接收响应数据
               let { error_code, reason } = response.data;
-              if (!error_code) {
+              if (error_code === 0) {
                 //弹出成功提示
                 this.$message({
                   showClose: true,
@@ -239,7 +240,7 @@ export default {
                 });
                 //请求账号数据(刷新)
                 this.getAccountListByPage();
-              } else {
+              } else if (error_code) {
                 //弹出失败提示
                 this.$message.error(reason);
               }
@@ -306,7 +307,7 @@ export default {
             .then(response => {
               //接收响应数据
               let { error_code, reason } = response.data;
-              if (!error_code) {
+              if (error_code === 0) {
                 //弹出成功提示
                 this.$message({
                   showClose: true,
@@ -315,7 +316,7 @@ export default {
                 });
                 //请求账号数据(刷新)
                 this.getAccountListByPage();
-              } else {
+              } else if (error_code) {
                 //弹出失败提示
                 this.$message.error(reason);
               }
@@ -344,7 +345,7 @@ export default {
             .then(response => {
               //接收响应数据
               let { error_code, reason } = response.data;
-              if (!error_code) {
+              if (error_code === 0) {
                 //弹出成功提示
                 this.$message({
                   showClose: true,
@@ -353,7 +354,7 @@ export default {
                 });
                 //请求账号数据(刷新)
                 this.getAccountListByPage();
-              } else {
+              } else if (error_code) {
                 //弹出失败提示
                 this.$message.error(reason);
               }

@@ -197,7 +197,7 @@ router.get('/accountinfo', (req, res) => {
 
 // 获取头像请求
 router.get('/getavatar', (req, res) => {
-  let {username} = req.query;
+  let { username } = req.query;
   // 构造sql
   const sqlStr = `select * from account where username='${username}'`;
   // 执行sql
@@ -207,5 +207,222 @@ router.get('/getavatar', (req, res) => {
   })
 })
 
+/* 
+  获取菜单路由路由: /role
+*/
+router.get('/role', (req, res) => {
+  // 获取个人信息
+  let role = req.user.usergroup;
+  if (role === "高级管理员") {
+    let navDate = [
+      {
+        icon: "el-icon-setting",
+        title: "系统管理",
+        subs: [
+          {
+            index: "/",
+            title: "系统信息"
+          }
+        ]
+      },
+      {
+        icon: "el-icon-smms-zhanghaoguanli",
+        title: "账号管理",
+        subs: [
+          {
+            index: "/accountmanage",
+            title: "账号管理"
+          },
+          {
+            index: "/accountadd",
+            title: "添加账号"
+          },
+          {
+            index: "/passwordmodify",
+            title: "密码修改"
+          }
+        ]
+      },
+      {
+        icon: "el-icon-goods",
+        title: "商品管理",
+        subs: [
+          {
+            index: "/goodsmanage",
+            title: "商品管理"
+          },
+          {
+            index: "/goodsadd",
+            title: "添加商品"
+          }
+        ]
+      },
+      {
+        icon: "el-icon-smms-jinhuo",
+        title: "进货管理",
+        subs: [
+          {
+            index: "/stockmanage",
+            title: "库存管理"
+          },
+          {
+            index: "/stockadd",
+            title: "添加库存"
+          }
+        ]
+      },
+      {
+        icon: "el-icon-smms-chuhuo",
+        title: "出货管理",
+        subs: [
+          {
+            index: "/saleslist",
+            title: "销售列表"
+          },
+          {
+            index: "/goodsoutstock",
+            title: "商品出库"
+          },
+          {
+            index: "/goodsreturn",
+            title: "商品退货"
+          }
+        ]
+      },
+      {
+        icon: "el-icon-smms-tongji",
+        title: "统计管理",
+        subs: [
+          {
+            index: "/salestatistics",
+            title: "销售统计"
+          }
+        ]
+      },
+      {
+        icon: "el-icon-menu",
+        title: "分类管理",
+        subs: [
+          {
+            index: "/classifymanage",
+            title: "分类管理"
+          },
+          {
+            index: "/classifyadd",
+            title: "添加分类"
+          }
+        ]
+      },
+      {
+        icon: "el-icon-smms-huiyuanguanli",
+        title: "会员管理",
+        subs: [
+          {
+            index: "/membermanage",
+            title: "会员管理"
+          },
+          {
+            index: "/memberadd",
+            title: "添加会员"
+          }
+        ]
+      }
+    ];
+    res.send(navDate);
+  } else if (role === "普通用户") {
+    let navDate = [
+      {
+        icon: "el-icon-setting",
+        title: "系统管理",
+        subs: [
+          {
+            index: "/",
+            title: "系统信息"
+          }
+        ]
+      },
+      {
+        icon: "el-icon-smms-zhanghaoguanli",
+        index: "/passwordmodify",
+        title: "密码修改"
+      },
+      {
+        icon: "el-icon-goods",
+        title: "商品管理",
+        subs: [
+          {
+            index: "/goodsmanage",
+            title: "商品管理"
+          },
+          {
+            index: "/goodsadd",
+            title: "添加商品"
+          }
+        ]
+      },
+      {
+        icon: "el-icon-smms-jinhuo",
+        title: "进货管理",
+        subs: [
+          {
+            index: "/stockmanage",
+            title: "库存管理"
+          },
+          {
+            index: "/stockadd",
+            title: "添加库存"
+          }
+        ]
+      },
+      {
+        icon: "el-icon-smms-chuhuo",
+        title: "出货管理",
+        subs: [
+          {
+            index: "/saleslist",
+            title: "销售列表"
+          },
+          {
+            index: "/goodsoutstock",
+            title: "商品出库"
+          },
+          {
+            index: "/goodsreturn",
+            title: "商品退货"
+          }
+        ]
+      },
+      {
+        icon: "el-icon-menu",
+        title: "分类管理",
+        subs: [
+          {
+            index: "/classifymanage",
+            title: "分类管理"
+          },
+          {
+            index: "/classifyadd",
+            title: "添加分类"
+          }
+        ]
+      },
+      {
+        icon: "el-icon-smms-huiyuanguanli",
+        title: "会员管理",
+        subs: [
+          {
+            index: "/membermanage",
+            title: "会员管理"
+          },
+          {
+            index: "/memberadd",
+            title: "添加会员"
+          }
+        ]
+      }
+    ];
+    res.send(navDate);
+  }
+});
 
 module.exports = router;

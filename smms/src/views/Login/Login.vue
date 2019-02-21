@@ -139,9 +139,9 @@ export default {
               let { error_code, reason, token, username } = response.data;
               if (!error_code) {
                 // 把token存在浏览器的本地存储中
-                window.localStorage.setItem("token", token);
+                window.sessionStorage.setItem("token", token);
                 // 把username存在浏览器的本地存储中
-                window.localStorage.setItem("username", username);
+                window.sessionStorage.setItem("username", username);
                 this.$message({
                   //弹出成功提示
                   showClose: true,

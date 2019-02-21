@@ -188,7 +188,7 @@ export default {
             .then(response => {
               //接收响应数据
               let { error_code, reason } = response.data;
-              if (!error_code) {
+              if (error_code === 0) {
                 //弹出成功提示
                 this.$message({
                   showClose: true,
@@ -197,7 +197,7 @@ export default {
                 });
                 //请求分类数据(刷新)
                 this.getClassifyListByPage();
-              } else {
+              } else if (error_code) {
                 //弹出失败提示
                 this.$message.error(reason);
               }
@@ -252,7 +252,7 @@ export default {
             .then(response => {
               //接收响应数据
               let { error_code, reason } = response.data;
-              if (!error_code) {
+              if (error_code === 0) {
                 //弹出成功提示
                 this.$message({
                   showClose: true,
@@ -261,7 +261,7 @@ export default {
                 });
                 //请求分类数据(刷新)
                 this.getClassifyListByPage();
-              } else {
+              } else if (error_code) {
                 //弹出失败提示
                 this.$message.error(reason);
               }
@@ -290,7 +290,7 @@ export default {
             .then(response => {
               //接收响应数据
               let { error_code, reason } = response.data;
-              if (!error_code) {
+              if (error_code === 0) {
                 //弹出成功提示
                 this.$message({
                   showClose: true,
@@ -299,7 +299,7 @@ export default {
                 });
                 //请求账号数据(刷新)
                 this.getClassifyListByPage();
-              } else {
+              } else if (error_code) {
                 //弹出失败提示
                 this.$message.error(reason);
               }

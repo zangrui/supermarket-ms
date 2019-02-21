@@ -149,7 +149,7 @@ export default {
             .then(response => {
               //接收响应数据
               let { error_code, reason } = response.data;
-              if (!error_code) {
+              if (error_code === 0) {
                 this.$message({
                   //弹出成功提示
                   showClose: true,
@@ -158,7 +158,7 @@ export default {
                 });
                 //跳转到账号管理列表
                 this.$router.push("/accountmanage");
-              } else {
+              } else if (error_code) {
                 //弹出失败提示
                 this.$message.error(reason);
               }

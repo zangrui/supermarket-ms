@@ -30,7 +30,7 @@
             <img v-if="avatarUrl" :src="avatarUrl" class="avatar">
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
-          <el-button @click="saveAvatar" size="small" type="primary">确定</el-button>
+          <el-button @click="saveAvatar" size="small" type="primary" style="margin-top:10px">确定</el-button>
         </div>
       </div>
     </el-card>
@@ -76,7 +76,6 @@ export default {
     handleAvatarChange(file) {
       // 回显图片
       this.avatarUrl = URL.createObjectURL(file.raw);
-      console.log(1)
     },
     handleAvatarSuccess() {
       this.$message({
