@@ -43,11 +43,9 @@ export default {
     this.username = window.sessionStorage.getItem("username");
     // 获取头像
     this.getAvatar();
-    bus.$on("avt", avt => {
-      if (avt) {
-        // 获取头像
-        this.getAvatar();
-      }
+    bus.$on("avt", () => {
+      // 获取头像
+      this.getAvatar();
     });
   },
   methods: {
@@ -79,7 +77,7 @@ export default {
       this.req
         .get("/account/getavatar", { username })
         .then(response => {
-          this.avatarUrl = "http://172.16.9.9:3000" + response.data[0].imgurl;
+          this.avatarUrl = "http://127.0.0.1:3000" + response.data[0].imgurl;
         })
         .catch(err => {
           console.log(err);

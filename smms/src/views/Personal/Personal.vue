@@ -17,7 +17,7 @@
           <el-upload
             class="avatar-uploader"
             ref="upload"
-            action="http://172.16.9.9:3000/login/upload"
+            action="http://127.0.0.1:3000/login/upload"
             :data="userInfo"
             :auto-upload="false"
             :show-file-list="false"
@@ -82,13 +82,11 @@ export default {
         type: "success",
         message: "上传成功！"
       });
-      //组件传递
-      bus.$emit("avt", "true");
+      //组件通信
+      bus.$emit("avt");
     },
     handleAvatarError() {
       this.$message.error("上传失败！");
-      //组件传递
-      bus.$emit("avt", "false");
     },
     beforeAvatarUpload(file) {
       const isJPG = file.type === "image/jpeg";

@@ -102,7 +102,8 @@ export default new Router({
           component: () => import('./views/Personal/Personal.vue')
         }
       ]
-    }, {
+    }, 
+    {
       path: '*',
       name: '404',
       component: () => import('./views/NotFound/NotFound.vue')

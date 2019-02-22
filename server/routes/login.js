@@ -14,8 +14,6 @@ const jwt = require('jsonwebtoken');
 */
 router.post('/checklogin', (req, res) => {
   //接收账号和密码
-  console.log(1)
-
   let { username, password } = req.body;
   //构造查询sql语句
   const sqlStr = `select * from account where username='${username}' and password='${password}'`;

@@ -10,7 +10,7 @@ import { Message } from 'element-ui'
 //引入路由文件
 import router from '@/router'
 // 设置默认请求服务器根目录
-axios.defaults.baseURL = 'http://172.16.9.9:3000';
+axios.defaults.baseURL = 'http://127.0.0.1:3000';
 // 写一个axios的请求拦截器 （在axios请求发送之前）
 axios.interceptors.request.use(config => {
     // 获取token
