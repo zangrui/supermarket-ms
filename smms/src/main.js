@@ -24,16 +24,6 @@ Vue.use(VueParticles);
 //把封装后axios挂在Vue原型上
 Vue.prototype.req = req;
 
-//阻止生产提示
-Vue.config.productionTip = false
-
-//创建vue实例对象 挂载dom 把路由 和 app顶级组件传入 渲染进入dom容器中
-new Vue({
-  router,
-  render: h => h(App)
-}).$mount('#app');
-
-
 //全局路由守卫 拦截所有路由
 router.beforeEach((to, from, next) => {
   //获取token
@@ -49,3 +39,12 @@ router.beforeEach((to, from, next) => {
     next();//放行 
   }
 });
+
+//阻止生产提示
+Vue.config.productionTip = false
+
+//创建vue实例对象 挂载dom 把路由 和 app顶级组件传入 渲染进入dom容器中
+new Vue({
+  router,
+  render: h => h(App)
+}).$mount('#app');
